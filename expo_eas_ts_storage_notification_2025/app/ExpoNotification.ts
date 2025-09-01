@@ -28,19 +28,55 @@ export const expoRemoveNotificationsAsync = () => {
   return Promise.all(promises);
 }
 
+export const expoScheduleNotificationAsync = async (title: string, message: string, date: Date): Promise<string> => {
+  if (!isNotificationPossible()) {
+    return Promise.reject("Notifications not possible on this device");
+  }
+  console.log("Scheduling notification for date: ", date.toTimeString());
 
+  Notifications.scheduleNotificationAsync({
+    content: { title: "Test", body: "Immediate" },
+    trigger: null, // Immediate notification
+  }).then(id => console.log("Immediate notification id: ", id))
+  .catch(err => console.error("Error scheduling immediate notification: ", err));
+
+
+
+  return await Notifications.scheduleNotificationAsync({
+    content: {
+      title: title,
+      body: message,
+    },
+    trigger: {
+      channelId: 'default', // Required for Android
+      date,                 // Schedule for a specific date/time
+    },
+  });
+}
+
+/*
 // Returns notification identifier
 export const expoScheduleNotificationAsync = async (title: string, message: string, date: Date): Promise<string> => {
-
+  if (!isNotificationPossible()) {
+    return Promise.reject("Notifications not possible on this device");
+  }
+  console.log("Scheduling notification for date: ", date.toTimeString());
   // TODO try to find what happens if same id is passed for multiple schedule notification
   return await Notifications.scheduleNotificationAsync({
     content: {
       title: title,
-      body: message
+      body: message,
+      // channelId: 'default',
     },
+    // trigger: {
+    //   type: SchedulableTriggerInputTypes.DATE,
+    //   date: new Date()
+    // }
     trigger: {
-      type: SchedulableTriggerInputTypes.TIME_INTERVAL,
-      seconds: 5
+      // type: SchedulableTriggerInputTypes.TIME_INTERVAL,
+      channelId: 'default', 
+      seconds: 5,
+      repeats: false,
     },
     // trigger: {
     //   type: SchedulableTriggerInputTypes.DATE,
@@ -48,6 +84,7 @@ export const expoScheduleNotificationAsync = async (title: string, message: stri
     // }
   });
 }
+  */
 
 
 // https://docs.expo.dev/push-notifications/push-notifications-setup/

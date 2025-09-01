@@ -1,11 +1,36 @@
-import {ScrollView, Text, TouchableOpacity, View} from "react-native";
-import {useState} from "react";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   expoRegisterForNotificationsAsync,
   expoRemoveNotificationsAsync,
   expoScheduleNotificationAsync
 } from "@/app/ExpoNotification";
+
+import * as Notifications from 'expo-notifications';
+import { useEffect } from 'react';
+
+
+Notifications.setNotificationChannelAsync('default', {
+      name: 'Default',
+      importance: Notifications.AndroidImportance.HIGH,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#FF231F7C',
+    });
+
+
+    Notifications.setNotificationHandler({
+      handleNotification: () => {
+        return new Promise<Notifications.NotificationBehavior>(() => {
+          return {
+            shouldShowAlert: true,
+            shouldPlaySound: true,
+            shouldSetBadge: true,
+          }
+        })
+      }
+    });
+
 
 export default function Index() {
 
@@ -15,6 +40,33 @@ export default function Index() {
     console.log("Set value in storage");
     AsyncStorage.setItem("myStorage", "New Value: " + new Date().toISOString());
   }
+
+  useEffect(() => {
+    Notifications.setNotificationChannelAsync('default', {
+      name: 'Default',
+      importance: Notifications.AndroidImportance.HIGH,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#FF231F7C',
+    });
+
+
+    Notifications.setNotificationHandler({
+      handleNotification: () => {
+        return new Promise<Notifications.NotificationBehavior>(() => {
+          return {
+            shouldShowAlert: true,
+            shouldPlaySound: true,
+            shouldSetBadge: true,
+            shouldShowInForeground: true,
+            shouldShowList: true,
+          }
+        })
+      }
+    });
+
+
+  }, []);
+
 
   const handleGetStorage = () => {
     console.log("Get value from storage");
@@ -27,8 +79,10 @@ export default function Index() {
         if (registered) {
           try {
             console.log("Setting up notifications.");
+            const date = new Date();
+            date.setSeconds(date.getSeconds() + 5);
 
-            expoScheduleNotificationAsync("Notification test", `Message ${new Date().toISOString()}`, new Date(new Date().getDate() + (5 + 1000)))
+            expoScheduleNotificationAsync("Notification test", `Message ${new Date().toISOString()}`, date)
               .then(() => console.log("Successfully set notification"))
               .catch(e => console.log("Failed set notification"));
           } catch (error) {
@@ -63,7 +117,7 @@ export default function Index() {
         <Text>{myStorage}</Text>
 
         <TouchableOpacity onPress={handleShowNotification}>
-          <Text>Show Notification 2</Text>
+          <Text>Show Notification 0</Text>
         </TouchableOpacity>
 
       </ScrollView>
