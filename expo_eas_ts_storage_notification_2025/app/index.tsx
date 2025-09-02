@@ -4,31 +4,9 @@ import {
   expoScheduleNotificationAsync
 } from "@/app/ExpoNotification";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useState } from "react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
-
 import * as Notifications from 'expo-notifications';
-import { useEffect } from 'react';
-
-Notifications.setNotificationChannelAsync('default', {
-  name: 'Default',
-  importance: Notifications.AndroidImportance.HIGH,
-  vibrationPattern: [0, 250, 250, 250],
-  lightColor: '#FF231F7C',
-});
-
-
-Notifications.setNotificationHandler({
-  handleNotification: () => {
-    return new Promise<Notifications.NotificationBehavior>(() => {
-      return {
-        shouldShowAlert: true,
-        shouldPlaySound: true,
-        shouldSetBadge: true,
-      }
-    })
-  }
-});
+import { useEffect, useState } from "react";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 
 export default function Index() {
@@ -41,32 +19,37 @@ export default function Index() {
   }
 
   useEffect(() => {
+    
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        // shouldShowAlert: true, // Deprecated, use shouldShowBanner
+        shouldShowBanner: true,
+        shouldPlaySound: true,
+        shouldSetBadge: true,
+        shouldShowInForeground: true,
+        shouldShowList: true,
+      }),
+    });
+
 
     // If needed. Do this only on android.
-    Notifications.setNotificationChannelAsync('default', {
-      name: 'Default',
-      importance: Notifications.AndroidImportance.HIGH,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: '#FF231F7C',
-    });
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'Default',
+        importance: Notifications.AndroidImportance.HIGH,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+  
 
-
-    Notifications.setNotificationHandler({
-      handleNotification: () => {
-        return new Promise<Notifications.NotificationBehavior>(() => {
-          return {
-            shouldShowAlert: true,
-            shouldPlaySound: true,
-            shouldSetBadge: true,
-            shouldShowInForeground: true,
-            shouldShowList: true,
-          }
-        })
+    // Request notification permissions
+    (async () => {
+      const { status } = await Notifications.requestPermissionsAsync();
+      if (status !== 'granted') {
+        alert('Permission for notifications not granted!');
       }
-    });
-
-
+    })();
   }, []);
+
 
 
   const handleGetStorage = () => {
@@ -100,7 +83,16 @@ export default function Index() {
 
 
   const handleShowNotification2 = () => {
-    console.log("Showing notification 2");
+    console.log("Sending notification");
+    Notifications.scheduleNotificationAsync({
+      content: {
+        title: "Hello",
+        body: "This is a test notification",
+        sound: true,
+        priority: Notifications.AndroidNotificationPriority.HIGH
+      },
+      trigger: null,
+    });
   }
 
 

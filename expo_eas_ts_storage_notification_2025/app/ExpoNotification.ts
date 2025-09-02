@@ -29,9 +29,9 @@ export const expoRemoveNotificationsAsync = () => {
 }
 
 export const expoScheduleNotificationAsync = async (title: string, message: string, date: Date): Promise<string> => {
-  if (!isNotificationPossible()) {
-    return Promise.reject("Notifications not possible on this device");
-  }
+  // if (!isNotificationPossible()) {
+  //   return Promise.reject("Notifications not possible on this device");
+  // }
   console.log("Scheduling notification for date: ", date.toTimeString());
 
   Notifications.scheduleNotificationAsync({
