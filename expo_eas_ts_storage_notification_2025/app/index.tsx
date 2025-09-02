@@ -1,35 +1,34 @@
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
-import { useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   expoRegisterForNotificationsAsync,
   expoRemoveNotificationsAsync,
   expoScheduleNotificationAsync
 } from "@/app/ExpoNotification";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useState } from "react";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 import * as Notifications from 'expo-notifications';
 import { useEffect } from 'react';
 
-
 Notifications.setNotificationChannelAsync('default', {
-      name: 'Default',
-      importance: Notifications.AndroidImportance.HIGH,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: '#FF231F7C',
-    });
+  name: 'Default',
+  importance: Notifications.AndroidImportance.HIGH,
+  vibrationPattern: [0, 250, 250, 250],
+  lightColor: '#FF231F7C',
+});
 
 
-    Notifications.setNotificationHandler({
-      handleNotification: () => {
-        return new Promise<Notifications.NotificationBehavior>(() => {
-          return {
-            shouldShowAlert: true,
-            shouldPlaySound: true,
-            shouldSetBadge: true,
-          }
-        })
+Notifications.setNotificationHandler({
+  handleNotification: () => {
+    return new Promise<Notifications.NotificationBehavior>(() => {
+      return {
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: true,
       }
-    });
+    })
+  }
+});
 
 
 export default function Index() {
@@ -42,6 +41,8 @@ export default function Index() {
   }
 
   useEffect(() => {
+
+    // If needed. Do this only on android.
     Notifications.setNotificationChannelAsync('default', {
       name: 'Default',
       importance: Notifications.AndroidImportance.HIGH,
@@ -97,6 +98,12 @@ export default function Index() {
     }, (reason: any) => console.log("Failed to remove previously set notifications.", reason)); // Failed to remove notification
   }
 
+
+  const handleShowNotification2 = () => {
+    console.log("Showing notification 2");
+  }
+
+
   return (
     <View
       style={{
@@ -118,6 +125,10 @@ export default function Index() {
 
         <TouchableOpacity onPress={handleShowNotification}>
           <Text>Show Notification 0</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={handleShowNotification2}>
+          <Text>Show Notification 1</Text>
         </TouchableOpacity>
 
       </ScrollView>

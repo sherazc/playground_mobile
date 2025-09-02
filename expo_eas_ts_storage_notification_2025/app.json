@@ -9,7 +9,8 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sherazc.expo-eas-ts-storage-notification-2025"
     },
     "android": {
       "adaptiveIcon": {
