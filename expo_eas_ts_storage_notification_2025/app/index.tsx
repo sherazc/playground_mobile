@@ -18,38 +18,6 @@ export default function Index() {
     AsyncStorage.setItem("myStorage", "New Value: " + new Date().toISOString());
   }
 
-  useEffect(() => {
-    
-    Notifications.setNotificationHandler({
-      handleNotification: async () => ({
-        // shouldShowAlert: true, // Deprecated, use shouldShowBanner
-        shouldShowBanner: true,
-        shouldPlaySound: true,
-        shouldSetBadge: true,
-        shouldShowInForeground: true,
-        shouldShowList: true,
-      }),
-    });
-
-
-    // If needed. Do this only on android.
-      Notifications.setNotificationChannelAsync('default', {
-        name: 'Default',
-        importance: Notifications.AndroidImportance.HIGH,
-        vibrationPattern: [0, 250, 250, 250],
-        lightColor: '#FF231F7C',
-      });
-  
-
-    // Request notification permissions
-    (async () => {
-      const { status } = await Notifications.requestPermissionsAsync();
-      if (status !== 'granted') {
-        alert('Permission for notifications not granted!');
-      }
-    })();
-  }, []);
-
 
 
   const handleGetStorage = () => {

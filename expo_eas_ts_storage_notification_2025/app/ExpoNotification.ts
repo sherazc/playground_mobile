@@ -34,20 +34,15 @@ export const expoScheduleNotificationAsync = async (title: string, message: stri
   // }
   console.log("Scheduling notification for date: ", date.toTimeString());
 
-  Notifications.scheduleNotificationAsync({
-    content: { title: "Test", body: "Immediate" },
-    trigger: null, // Immediate notification
-  }).then(id => console.log("Immediate notification id: ", id))
-  .catch(err => console.error("Error scheduling immediate notification: ", err));
-
-
-
   return await Notifications.scheduleNotificationAsync({
     content: {
       title: title,
       body: message,
+      sound: true,
+      priority: Notifications.AndroidNotificationPriority.HIGH
     },
     trigger: {
+      type: SchedulableTriggerInputTypes.DATE,
       channelId: 'default', // Required for Android
       date,                 // Schedule for a specific date/time
     },
@@ -69,7 +64,7 @@ export const expoScheduleNotificationAsync = async (title: string, message: stri
       // channelId: 'default',
     },
     // trigger: {
-    //   type: SchedulableTriggerInputTypes.DATE,
+    //   ,
     //   date: new Date()
     // }
     trigger: {
@@ -104,6 +99,29 @@ export const expoRegisterForNotificationsAsync = async (): Promise<boolean> => {
   } else {
     result = true;
   }
+
+
+  Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        // shouldShowAlert: true, // Deprecated, use shouldShowBanner
+        shouldShowBanner: true,
+        shouldPlaySound: true,
+        shouldSetBadge: true,
+        shouldShowInForeground: true,
+        shouldShowList: true,
+      }),
+    });
+
+
+    // If needed. Do this only on android.
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'Default',
+        importance: Notifications.AndroidImportance.HIGH,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+  
+
   return result;
 };
 
