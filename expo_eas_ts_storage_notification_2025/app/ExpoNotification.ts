@@ -1,7 +1,13 @@
-import * as Notifications from 'expo-notifications';
-import {SchedulableTriggerInputTypes} from 'expo-notifications';
 import * as Device from 'expo-device';
-import {Alert} from 'react-native';
+import * as Notifications from 'expo-notifications';
+import { SchedulableTriggerInputTypes } from 'expo-notifications';
+import { Alert } from 'react-native';
+
+const isIOS = Device.osName?.toLowerCase() === "ios";
+const isAndroid = Device.osName?.toLowerCase() === "android";
+const isWindows = Device.osName?.toLowerCase() === "windows";
+const isMacOS = Device.osName?.toLowerCase() === "macos";
+const isLinux = Device.osName?.toLowerCase() === "linux";
 
 export const expoRemoveNotificationsAsync = () => {
   const promises: Array<Promise<any>> = [];
@@ -49,38 +55,6 @@ export const expoScheduleNotificationAsync = async (title: string, message: stri
   });
 }
 
-/*
-// Returns notification identifier
-export const expoScheduleNotificationAsync = async (title: string, message: string, date: Date): Promise<string> => {
-  if (!isNotificationPossible()) {
-    return Promise.reject("Notifications not possible on this device");
-  }
-  console.log("Scheduling notification for date: ", date.toTimeString());
-  // TODO try to find what happens if same id is passed for multiple schedule notification
-  return await Notifications.scheduleNotificationAsync({
-    content: {
-      title: title,
-      body: message,
-      // channelId: 'default',
-    },
-    // trigger: {
-    //   ,
-    //   date: new Date()
-    // }
-    trigger: {
-      // type: SchedulableTriggerInputTypes.TIME_INTERVAL,
-      channelId: 'default', 
-      seconds: 5,
-      repeats: false,
-    },
-    // trigger: {
-    //   type: SchedulableTriggerInputTypes.DATE,
-    //   date: date
-    // }
-  });
-}
-  */
-
 
 // https://docs.expo.dev/push-notifications/push-notifications-setup/
 // returns boolean if registration was successful
@@ -126,7 +100,7 @@ export const expoRegisterForNotificationsAsync = async (): Promise<boolean> => {
 };
 
 export const isNotificationPossible = (): boolean => {
-  if (!Device.isDevice) {
+  if (!Device.isDevice && isAndroid) {
     Alert.alert('No device!', "Must use physical device for Notifications.");
   }
   return Device.isDevice;

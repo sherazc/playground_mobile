@@ -4,7 +4,7 @@ import {
   expoScheduleNotificationAsync
 } from "@/app/ExpoNotification";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as Notifications from 'expo-notifications';
+
 import { useEffect, useState } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
@@ -50,20 +50,6 @@ export default function Index() {
   }
 
 
-  const handleShowNotification2 = () => {
-    console.log("Sending notification");
-    Notifications.scheduleNotificationAsync({
-      content: {
-        title: "Hello",
-        body: "This is a test notification",
-        sound: true,
-        priority: Notifications.AndroidNotificationPriority.HIGH
-      },
-      trigger: null,
-    });
-  }
-
-
   return (
     <View
       style={{
@@ -84,11 +70,7 @@ export default function Index() {
         <Text>{myStorage}</Text>
 
         <TouchableOpacity onPress={handleShowNotification}>
-          <Text>Show Notification 0</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={handleShowNotification2}>
-          <Text>Show Notification 1</Text>
+          <Text>Show Notification</Text>
         </TouchableOpacity>
 
       </ScrollView>
